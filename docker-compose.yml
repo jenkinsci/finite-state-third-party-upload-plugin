@@ -1,0 +1,12 @@
+version: '3'
+services:
+  jenkins:
+    image: jenkins/jenkins:latest
+    volumes:
+      - ~/temp-jenkins:/var/jenkins_home
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+    ports:
+      - 8082:8080
+      - 50000:50000
+    restart: unless-stopped

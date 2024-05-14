@@ -1,0 +1,6 @@
+_extends: .github
+tag-template: finite-state-binary-scan-$NEXT_MINOR_VERSION
+template: |
+  ## What’s Changed
+
+  $CHANGES

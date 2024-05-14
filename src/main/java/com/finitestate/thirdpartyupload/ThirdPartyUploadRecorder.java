@@ -252,7 +252,7 @@ public class ThirdPartyUploadRecorder extends Recorder {
         envList.add("INPUT_ASSET-ID=" + assetId);
         envList.add("INPUT_VERSION=" + parsedVersion);
         envList.add("INPUT_TEST-TYPE=" + testType);
-        
+
         // non required parameters:
         envList.add("INPUT_BUSINESS-UNIT-ID=" + businessUnitId);
         envList.add("INPUT_CREATED-BY-USER-ID=" + createdByUserId);
@@ -414,7 +414,7 @@ public class ThirdPartyUploadRecorder extends Recorder {
         public FormValidation doCheckFilePath(@QueryParameter String value) throws IOException, ServletException {
             return checkRequiredValue(value);
         }
-        
+
         public FormValidation doCheckTestType(@QueryParameter String value) throws IOException, ServletException {
             return checkRequiredValue(value);
         }

@@ -50,7 +50,6 @@ To use this plugin, follow the following steps:
 6. Click on **Save** button to save the configuration
 7. After **building** the project, the plugin will upload the file to the Finite State Platform. The output will be displayed in the console.
 ![Console output](./screenshots/console_output.png)
-
 **Note:** Please note that if any errors occur, they will also be displayed on the same screen.
 
 ## Issues

@@ -56,12 +56,7 @@ def create_and_upload_test_results():
     error = None
     asset_version = ""
     logger.info("Starting - Create new asset version and upload test results")
-
-    if not INPUT_GITHUB_TOKEN and INPUT_AUTOMATIC_COMMENT:
-        msg = "Caught an exception. The [Github Token] input is required when [Automatic comment] is enabled."
-        error = msg
-        logger.error(msg)
-
+    
     if error is None:
         # Authenticate
         try:
@@ -94,7 +89,6 @@ def create_and_upload_test_results():
                         test_type=INPUT_TEST_TYPE
                     )
                 )
-                set_multiline_output("response", response)
                 asset_version = extract_asset_version(
                     response["launchTestResultProcessing"]["key"]
                 )

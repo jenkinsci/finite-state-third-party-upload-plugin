@@ -351,7 +351,7 @@ public class ThirdPartyUploadRecorder extends Recorder {
         return true;
     }
 
-    @Symbol("greet")
+    @Symbol("fs-third-party-upload")
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
         public ListBoxModel doFillFiniteStateClientIdItems(

@@ -45,8 +45,8 @@
       <dependency>
         <!-- Pick up common dependencies for the selected LTS line: https://github.com/jenkinsci/bom#usage -->
         <groupId>io.jenkins.tools.bom</groupId>
-        <artifactId>bom-2.414.x</artifactId>
-        <version>2907.vcb_35d6f2f7de</version>
+        <artifactId>bom-2.426.x</artifactId>
+        <version>3056.v53343b_a_b_a_850</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -73,12 +73,10 @@
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>credentials</artifactId>
-      <version>1319.v7eb_51b_3a_c97b_</version>
     </dependency>
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>plain-credentials</artifactId>
-      <version>177.vb_231f25527e7</version>
     </dependency>
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>

@@ -466,7 +466,7 @@ public class ThirdPartyUploadRecorder extends Recorder {
         public FormValidation doCheckTestType(@AncestorInPath Item item, @QueryParameter String value)
                 throws IOException, ServletException {
             if (item == null
-                    || !item.hasPermission(Item.EXTENDED_READ) && !item.hasPermission(CredentialsProvider.USE_ITEM)) {
+                    || (!item.hasPermission(Item.EXTENDED_READ) && !item.hasPermission(CredentialsProvider.USE_ITEM))) {
                 return FormValidation.error("You do not have permission to perform this action.");
             }
             if (value == null || value.trim().isEmpty() || ("-- Select --".equals(value))) {

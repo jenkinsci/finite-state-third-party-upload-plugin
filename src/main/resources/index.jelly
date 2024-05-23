@@ -1,4 +1,4 @@
 <?jelly escape-by-default='true'?>
 <div>
-    TODO
+    The Finite State `third-party-upload` Plugin allows you to easily integrate the Finite State Platform into Jenkins.
 </div>

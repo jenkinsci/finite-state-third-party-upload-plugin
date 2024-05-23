@@ -354,6 +354,8 @@ public class ThirdPartyUploadRecorder extends Recorder {
     @Symbol("fs-third-party-upload")
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
+        
+        @RequirePOST
         public ListBoxModel doFillFiniteStateClientIdItems(
                 @AncestorInPath Item item, @QueryParameter String finiteStateClientId) {
             StandardListBoxModel items = new StandardListBoxModel();
@@ -373,6 +375,7 @@ public class ThirdPartyUploadRecorder extends Recorder {
             return items;
         }
 
+        @RequirePOST
         public ListBoxModel doFillFiniteStateSecretItems(
                 @AncestorInPath Item item, @QueryParameter String finiteStateSecret) {
             StandardListBoxModel items = new StandardListBoxModel();
@@ -392,6 +395,7 @@ public class ThirdPartyUploadRecorder extends Recorder {
             return items;
         }
 
+        @RequirePOST
         public ListBoxModel doFillFiniteStateOrganizationContextItems(
                 @AncestorInPath Item item, @QueryParameter String finiteStateOrganizationContext) {
             StandardListBoxModel items = new StandardListBoxModel();

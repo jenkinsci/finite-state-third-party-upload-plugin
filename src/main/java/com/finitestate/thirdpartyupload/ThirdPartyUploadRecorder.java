@@ -427,36 +427,42 @@ public class ThirdPartyUploadRecorder extends Recorder {
         }
 
         @RequirePOST
+        // lgtm[jenkins/no-permission-check]
         public FormValidation doCheckFiniteStateClientId(@AncestorInPath Item item, @QueryParameter String value)
                 throws IOException, ServletException {
             return checkRequiredValue(item, value);
         }
 
         @RequirePOST
+        // lgtm[jenkins/no-permission-check]
         public FormValidation doCheckFiniteStateSecret(@AncestorInPath Item item, @QueryParameter String value)
                 throws IOException, ServletException {
             return checkRequiredValue(item, value);
         }
 
         @RequirePOST
+        // lgtm[jenkins/no-permission-check]
         public FormValidation doCheckFiniteStateOrganizationContext(
                 @AncestorInPath Item item, @QueryParameter String value) throws IOException, ServletException {
             return checkRequiredValue(item, value);
         }
 
         @RequirePOST
+        // lgtm[jenkins/no-permission-check]
         public FormValidation doCheckAssetId(@AncestorInPath Item item, @QueryParameter String value)
                 throws IOException, ServletException {
             return checkRequiredValue(item, value);
         }
 
         @RequirePOST
+        // lgtm[jenkins/no-permission-check]
         public FormValidation doCheckVersion(@AncestorInPath Item item, @QueryParameter String value)
                 throws IOException, ServletException {
             return checkRequiredValue(item, value);
         }
 
         @RequirePOST
+        // lgtm[jenkins/no-permission-check]
         public FormValidation doCheckFilePath(@AncestorInPath Item item, @QueryParameter String value)
                 throws IOException, ServletException {
             return checkRequiredValue(item, value);

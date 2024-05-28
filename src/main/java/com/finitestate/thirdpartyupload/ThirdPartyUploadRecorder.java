@@ -354,6 +354,8 @@ public class ThirdPartyUploadRecorder extends Recorder {
     @Symbol("fs-third-party-upload")
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
+
+        @RequirePOST
         public ListBoxModel doFillFiniteStateClientIdItems(
                 @AncestorInPath Item item, @QueryParameter String finiteStateClientId) {
             StandardListBoxModel items = new StandardListBoxModel();
@@ -373,6 +375,7 @@ public class ThirdPartyUploadRecorder extends Recorder {
             return items;
         }
 
+        @RequirePOST
         public ListBoxModel doFillFiniteStateSecretItems(
                 @AncestorInPath Item item, @QueryParameter String finiteStateSecret) {
             StandardListBoxModel items = new StandardListBoxModel();
@@ -392,6 +395,7 @@ public class ThirdPartyUploadRecorder extends Recorder {
             return items;
         }
 
+        @RequirePOST
         public ListBoxModel doFillFiniteStateOrganizationContextItems(
                 @AncestorInPath Item item, @QueryParameter String finiteStateOrganizationContext) {
             StandardListBoxModel items = new StandardListBoxModel();
@@ -411,55 +415,68 @@ public class ThirdPartyUploadRecorder extends Recorder {
             return items;
         }
 
-        private FormValidation checkRequiredValue(String value) {
-            if (value.length() == 0) {
+        private FormValidation checkRequiredValue(Item item, String value) {
+            if (item == null
+                    || !item.hasPermission(Item.EXTENDED_READ) && !item.hasPermission(CredentialsProvider.USE_ITEM)) {
+                return FormValidation.error("You do not have permission to perform this action.");
+            }
+            if (value == null || value.trim().isEmpty()) {
                 return FormValidation.error("This value is required");
             }
             return FormValidation.ok();
         }
 
         @RequirePOST
-        public FormValidation doCheckFiniteStateClientId(@QueryParameter String value)
+        public FormValidation doCheckFiniteStateClientId(@AncestorInPath Item item, @QueryParameter String value)
                 throws IOException, ServletException {
-            return checkRequiredValue(value);
+            return checkRequiredValue(item, value);
         }
 
         @RequirePOST
-        public FormValidation doCheckFiniteStateSecret(@QueryParameter String value)
+        public FormValidation doCheckFiniteStateSecret(@AncestorInPath Item item, @QueryParameter String value)
                 throws IOException, ServletException {
-            return checkRequiredValue(value);
+            return checkRequiredValue(item, value);
         }
 
         @RequirePOST
-        public FormValidation doCheckFiniteStateOrganizationContext(@QueryParameter String value)
+        public FormValidation doCheckFiniteStateOrganizationContext(
+                @AncestorInPath Item item, @QueryParameter String value) throws IOException, ServletException {
+            return checkRequiredValue(item, value);
+        }
+
+        @RequirePOST
+        public FormValidation doCheckAssetId(@AncestorInPath Item item, @QueryParameter String value)
                 throws IOException, ServletException {
-            return checkRequiredValue(value);
+            return checkRequiredValue(item, value);
         }
 
         @RequirePOST
-        public FormValidation doCheckAssetId(@QueryParameter String value) throws IOException, ServletException {
-            return checkRequiredValue(value);
+        public FormValidation doCheckVersion(@AncestorInPath Item item, @QueryParameter String value)
+                throws IOException, ServletException {
+            return checkRequiredValue(item, value);
         }
 
         @RequirePOST
-        public FormValidation doCheckVersion(@QueryParameter String value) throws IOException, ServletException {
-            return checkRequiredValue(value);
+        public FormValidation doCheckFilePath(@AncestorInPath Item item, @QueryParameter String value)
+                throws IOException, ServletException {
+            return checkRequiredValue(item, value);
         }
 
         @RequirePOST
-        public FormValidation doCheckFilePath(@QueryParameter String value) throws IOException, ServletException {
-            return checkRequiredValue(value);
-        }
-
-        @RequirePOST
-        public FormValidation doCheckTestType(@QueryParameter String value) throws IOException, ServletException {
-            if (value.length() == 0 || ("-- Select --".equals(value))) {
-                return FormValidation.error("Please, select an option");
+        public FormValidation doCheckTestType(@AncestorInPath Item item, @QueryParameter String value)
+                throws IOException, ServletException {
+            if (item == null
+                    || (!item.hasPermission(Item.EXTENDED_READ) && !item.hasPermission(CredentialsProvider.USE_ITEM))) {
+                return FormValidation.error("You do not have permission to perform this action.");
+            }
+            if (value == null || value.trim().isEmpty() || ("-- Select --".equals(value))) {
+                return FormValidation.error("This value is required. Please, select a valid option");
             }
             return FormValidation.ok();
         }
 
         @RequirePOST
+        @SuppressWarnings("lgtm[jenkins/no-permission-check]")
         public ListBoxModel doFillTestTypeItems() {
             ListBoxModel items = new ListBoxModel();
             String[] testTypes = {

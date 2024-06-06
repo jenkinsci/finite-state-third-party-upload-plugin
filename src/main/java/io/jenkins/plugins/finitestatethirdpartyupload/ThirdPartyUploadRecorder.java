@@ -3,7 +3,6 @@ package io.jenkins.plugins.finitestatethirdpartyupload;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardCredentials;
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
-import org.jenkinsci.plugins.plaincredentials.StringCredentials;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.BuildImageCmd;
@@ -39,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletException;
 import jenkins.model.Jenkins;
 import org.jenkinsci.Symbol;
+import org.jenkinsci.plugins.plaincredentials.StringCredentials;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -267,8 +267,9 @@ public class ThirdPartyUploadRecorder extends Recorder {
                 DefaultDockerClientConfig.createDefaultConfigBuilder().build();
         DockerClient dockerClient = DockerClientBuilder.getInstance(config).build();
 
-        URL resourceUrl =
-                ThirdPartyUploadRecorder.class.getClassLoader().getResource("io/jenkins/plugins/finitestatethirdpartyupload/docker/Dockerfile");
+        URL resourceUrl = ThirdPartyUploadRecorder.class
+                .getClassLoader()
+                .getResource("io/jenkins/plugins/finitestatethirdpartyupload/docker/Dockerfile");
 
         BuildImageCmd buildImageCmd = dockerClient.buildImageCmd();
 

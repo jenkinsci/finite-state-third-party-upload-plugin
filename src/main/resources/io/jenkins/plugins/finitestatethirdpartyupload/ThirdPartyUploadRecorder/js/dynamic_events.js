@@ -1,8 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Hello from my Jenkins plugin JS!');
-    // Add your Hudson behavior or any custom JS code here    
-});
-
 function toggleFields() {
     var versionField = document.getElementById("version");
     var externalizableIdCheckbox = document.getElementById("externalizableId");

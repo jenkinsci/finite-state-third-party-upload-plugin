@@ -268,7 +268,7 @@ public class ThirdPartyUploadRecorder extends Recorder {
         DockerClient dockerClient = DockerClientBuilder.getInstance(config).build();
 
         URL resourceUrl =
-                ThirdPartyUploadRecorder.class.getClassLoader().getResource("com/finitestate/docker/Dockerfile");
+                ThirdPartyUploadRecorder.class.getClassLoader().getResource("io/jenkins/plugins/finitestatethirdpartyupload/docker/Dockerfile");
 
         BuildImageCmd buildImageCmd = dockerClient.buildImageCmd();
 

@@ -1,0 +1,65 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:c="/lib/credentials" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <div class="fs-third-party-uypload">
+        <st:adjunct includes="io/jenkins/plugins/finitestatethirdpartyupload/ThirdPartyUploadRecorder/js/dynamic_events"/>
+
+        <!-- authentication fields -->    
+        <f:entry field="finiteStateClientId" title="${%Finite State API client ID}" description="Finite State API client ID">
+            <c:select />
+        </f:entry>
+
+        <f:entry field="finiteStateSecret" title="${%Finite State API secret}" description="Finite State API secret">
+            <c:select />
+        </f:entry>
+
+        <f:entry title="${%Finite State Organization Context}" field="finiteStateOrganizationContext" description="The Organization-Context should have been provided to you by your Finite State representative and looks like xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+            <c:select/>
+        </f:entry>
+
+        <!-- config fields -->
+         <f:entry title="${%Asset ID}" field="assetId" description="Asset ID for the asset that the new asset version will belong to">
+            <f:textbox />
+        </f:entry>
+
+        <f:entry title="${%Use externalized ID as version}" field="externalizableId" description="We recommend to keep check this option. It will use a unique identifier id associated with the build for tag the version of the asset.">
+            <f:checkbox default="true" id="externalizableId" />
+        </f:entry>
+
+        <div id="version" style="display: none">
+            <f:entry title="${%Version}" field="version" description="The name of the asset version that will be created. Used when 'User externalized ID as version is disabled'">
+                <f:textbox />
+            </f:entry>
+        </div>
+
+        <f:entry title="${%File path}" field="filePath" description="Local path for the file to be uploaded">
+            <f:textbox />
+        </f:entry>
+
+        <f:entry title="${%Test Type}" field="testType">
+            <div class="help-area">
+                <j:out value="For the full list of supported upload types, review " />
+                <a href="https://docs.finitestate.io/supported-file-types" target="_blank">this list</a>
+            </div>
+            <f:select />
+        </f:entry>
+
+        <f:block>
+            <f:section title="Other Optional Configurations">
+                <f:advanced>
+                    <f:entry title="${%Business Unit ID}" field="businessUnitId" description="(optional) ID of the business unit that the asset version will belong to. If not provided, the asset version will adopt the existing business unit of the asset.">
+                        <f:textbox />
+                    </f:entry>
+                    <f:entry title="${%Created By User ID}" field="createdByUserId" description="(optional) ID of the user to be recorded as the 'Created By User' on the asset version. If not provided, the version will adopt the existing value of the asset.">
+                        <f:textbox />
+                    </f:entry>
+                    <f:entry title="${%Product ID}" field="productId" description="(optional) ID of the product that the asset version will belong to. If not provided, the existing product for the asset will be used, if applicable.">
+                      <f:textbox />
+                    </f:entry>
+                    <f:entry title="${%Artifact description}" field="artifactDescription" description="(optional) Description of the artifact. If not provided, the default is 'Firmware Binary'.">
+                      <f:textbox />
+                    </f:entry>
+                </f:advanced>
+            </f:section>
+        </f:block>
+    </div>
+</j:jelly>

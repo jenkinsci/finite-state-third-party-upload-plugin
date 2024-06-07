@@ -1,4 +1,4 @@
-package com.finitestate.thirdpartyupload;
+package io.jenkins.plugins.finitestatethirdpartyupload;
 
 import hudson.model.Run;
 import jenkins.model.RunAction2;

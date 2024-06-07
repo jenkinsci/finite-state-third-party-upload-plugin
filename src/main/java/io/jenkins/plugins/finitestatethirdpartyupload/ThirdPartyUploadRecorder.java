@@ -16,6 +16,7 @@ import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
+import io.jenkins.cli.shaded.org.apache.commons.lang.StringEscapeUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -224,7 +225,7 @@ public class ThirdPartyUploadRecorder extends Recorder {
     }
 
     public static String escapeEnvVar(String input) {
-        return input.replace("\"", "\\\"").replace("'", "\\'");
+        return StringEscapeUtils.escapeJava(input);
     }
 
     public static String validateEnvVar(String input) {
@@ -242,40 +243,56 @@ public class ThirdPartyUploadRecorder extends Recorder {
         try {
             Process process = processBuilder.start();
             int exitCode = process.waitFor();
-            if (exitCode == 0) {
-                // Docker is installed
-                return true;
-            }
+            return exitCode == 0;
         } catch (IOException | InterruptedException e) {
-            // Error occurred while running the command or waiting for the process to finish
+            // Log the exception instead of printing the stack trace
             e.printStackTrace();
         }
-        // Docker is not installed or an error occurred
         return false;
+    }
+
+    private boolean buildDockerImage(File dockerDir, BuildListener listener) {
+        ProcessBuilder buildProcessBuilder =
+                new ProcessBuilder("docker", "build", "-t", "finite-state-upload", dockerDir.getAbsolutePath());
+        buildProcessBuilder.redirectErrorStream(true);
+        try {
+            Process buildProcess = buildProcessBuilder.start();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(buildProcess.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    listener.getLogger().println(line);
+                }
+            }
+            int buildExitCode = buildProcess.waitFor();
+            if (buildExitCode != 0) {
+                listener.getLogger().println("Docker build failed");
+                return false;
+            }
+        } catch (IOException | InterruptedException e) {
+            // Log the exception instead of printing the stack trace
+            e.printStackTrace();
+            listener.getLogger().println("Docker build process encountered an error: " + e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener)
             throws InterruptedException, IOException {
         if (isDockerInstalled()) {
-            System.out.println("Docker is installed");
             listener.getLogger().println("Docker is installed");
         } else {
-            System.out.println("Docker is not installed");
             listener.getLogger().println("Docker is not installed");
             return false;
         }
-        if (getExternalizableId()) {
-            parsedVersion = build.getExternalizableId();
-        } else {
-            parsedVersion = version;
-        }
+
+        String parsedVersion = getExternalizableId() ? build.getExternalizableId() : version;
         String parsedFiniteStateClientId = validateEnvVar(getSecretTextValue(build, finiteStateClientId));
         String parsedFiniteStateSecret = validateEnvVar(getSecretTextValue(build, finiteStateSecret));
         String parsedFiniteStateOrganizationContext =
                 validateEnvVar(getSecretTextValue(build, finiteStateOrganizationContext));
 
-        // Create a map to hold environment variables
         List<String> envList = new ArrayList<>();
         envList.add("INPUT_FINITE-STATE-CLIENT-ID=" + escapeEnvVar(parsedFiniteStateClientId));
         envList.add("INPUT_FINITE-STATE-SECRET=" + escapeEnvVar(parsedFiniteStateSecret));
@@ -283,12 +300,11 @@ public class ThirdPartyUploadRecorder extends Recorder {
         envList.add("INPUT_ASSET-ID=" + escapeEnvVar(assetId));
         envList.add("INPUT_VERSION=" + escapeEnvVar(parsedVersion));
         envList.add("INPUT_TEST-TYPE=" + escapeEnvVar(testType));
-
-        // non required parameters:
         envList.add("INPUT_BUSINESS-UNIT-ID=" + escapeEnvVar(businessUnitId));
         envList.add("INPUT_CREATED-BY-USER-ID=" + escapeEnvVar(createdByUserId));
         envList.add("INPUT_PRODUCT-ID=" + escapeEnvVar(productId));
         envList.add("INPUT_ARTIFACT-DESCRIPTION=" + escapeEnvVar(artifactDescription));
+
         URL resourceUrl = ThirdPartyUploadRecorder.class
                 .getClassLoader()
                 .getResource("io/jenkins/plugins/finitestatethirdpartyupload/docker/Dockerfile");
@@ -300,24 +316,11 @@ public class ThirdPartyUploadRecorder extends Recorder {
         File dockerfile = new File(resourceUrl.getFile());
         File dockerDir = dockerfile.getParentFile();
 
-        // Step 1: Build the Docker image
-        ProcessBuilder buildProcessBuilder =
-                new ProcessBuilder("docker", "build", "-t", "finite-state-upload", dockerDir.getAbsolutePath());
-        buildProcessBuilder.redirectErrorStream(true);
-        Process buildProcess = buildProcessBuilder.start();
-
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(buildProcess.getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                listener.getLogger().println(line);
-            }
-        }
-
-        int buildExitCode = buildProcess.waitFor();
-        if (buildExitCode != 0) {
-            listener.getLogger().println("Docker build failed");
+        if (!buildDockerImage(dockerDir, listener)) {
             return false;
         }
+
+        buildDockerImage(dockerDir, listener);
 
         // Step 2: Verify the file exists
         File file = getFileFromWorkspace(build, filePath, listener);

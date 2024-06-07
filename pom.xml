@@ -62,10 +62,7 @@
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>docker-commons</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>docker-java-api</artifactId>
-    </dependency>
+
   </dependencies>
 
   <repositories>
